@@ -1,9 +1,11 @@
 <div class="grid">
 
     <div class="hash color-light">
-        <input type="text">
+        <input type="text" placeholder="Data..." onchange=""
+                [(ngModel)]="hashInput" 
+                (ngModelChange)="hashString()">
         <div class="hash-output">
-            (hash-string)
+            {{(hashOutput)}}
         </div>
     </div>
 

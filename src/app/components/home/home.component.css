@@ -25,6 +25,10 @@
     margin: 20px;
 }
 
+hash-output {
+    cursor: not-allowed;
+}
+
 .color-dark {
     background: rgb(0, 0, 0);
 }
