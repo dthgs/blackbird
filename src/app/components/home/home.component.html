@@ -1,5 +1,4 @@
 <div class="grid">
-
     <div class="hash color-light">
         <input type="text" placeholder="Data..." onchange=""
                 [(ngModel)]="hashInput" 
@@ -9,6 +8,10 @@
         </div>
     </div>
 
-    <div class="block color-light">BLOCK DIV</div>
-
+    <div class="block color-light">
+        <p style="text-align:center;">BLOCK DIV</p>
+        <div>
+            <li *ngFor="let block of coin.chain">{{block | json}}</li>
+        </div>
+    </div>
 </div>
