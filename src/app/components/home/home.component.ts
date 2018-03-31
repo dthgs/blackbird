@@ -15,8 +15,12 @@ export class HomeComponent implements OnInit {
 
   constructor() {
     console.log("constructor ran");
-    this.coin.addBlock(new Block(1, new Date(), "abc"));
+    this.coin.addBlock(new Block(1, new Date(), { coins: 10 }));
+    this.coin.addBlock(new Block(2, new Date(), { coins: 42 }));
     console.log(JSON.stringify(this.coin, null, 4));
+    console.log("Is chain valid? " + this.coin.checkChain());
+    this.coin.chain[1].data = { coins: 1000 };
+    console.log("Is chain valid? " + this.coin.checkChain());
   }
 
   ngOnInit() {

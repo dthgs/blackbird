@@ -39,4 +39,22 @@ export class Blockchain {
         block.hash = block.hashBlock();
         this.chain.push(block);
     }
+
+    checkChain(){
+        let valid = true;
+        for(let i = 1; i < this.chain.length; i++){
+            const block = this.chain[i];
+            const prevBlock = this.chain[i - 1];
+
+            if(block.prevHash != prevBlock.hash){
+                valid = false;
+                break;
+            }
+            if(block.hash != block.hashBlock()){
+                valid = false;
+                break;
+            }
+        }
+        return valid;
+    }
 }
