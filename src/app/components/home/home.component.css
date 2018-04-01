@@ -1,13 +1,13 @@
 .grid {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: auto auto;
     border-style: solid;
     border-color: white;
 
     grid-template-areas:
-    ". hash ."
-    ". block .";
+    "hash hash hash"
+    "block block block";
     grid-gap: 10px;
 }
 

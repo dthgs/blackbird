@@ -8,10 +8,12 @@
         </div>
     </div>
 
-    <div class="block color-light">
-        <p style="text-align:center;">BLOCK DIV</p>
-        <div>
-            <li *ngFor="let block of coin.chain">{{block | json}}</li>
+    <div *ngFor="let block of coin.chain">
+        <div class="block color-light">
+            <p style="text-align:center;">BLOCK DIV</p>
+                <li>{{block.index}}</li>
+                <li>{{block.timestamp}}</li>
+                <li>{{block.data | json}}</li>
         </div>
     </div>
 </div>
