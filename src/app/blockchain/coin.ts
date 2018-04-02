@@ -1,7 +1,7 @@
 import * as crypto from 'crypto-js';
 
 export class Block {    
-    index: number;
+    index; nonce: number;
     timestamp: Date;
     data: any;
     prevHash; hash: string;
@@ -12,15 +12,26 @@ export class Block {
         this.data = data;
         this.prevHash = prevHash;
         this.hash = this.hashBlock();
+        this.nonce = 0;
     }
 
     hashBlock(){
-        return crypto.SHA256(this.index + this.prevHash + this.timestamp + JSON.stringify(this.data)).toString();
+        return crypto.SHA256(this.index + this.prevHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
+    }
+
+    mineBlock(difficulty){
+        while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")){
+            this.nonce++;
+            this.hash = this.hashBlock();
+        }
+
+        console.log("Block mined: " + this.hash);
     }
 }
 
 export class Blockchain {
-    chain: any[];
+    chain: Block[];
+    difficulty = 3;
 
     constructor(){
         this.chain = [this.makeGenesisBlock()];
@@ -36,7 +47,7 @@ export class Blockchain {
 
     addBlock(block){
         block.prevHash = this.getLastBlock().hash;
-        block.hash = block.hashBlock();
+        block.mineBlock(this.difficulty);
         this.chain.push(block);
     }
 
