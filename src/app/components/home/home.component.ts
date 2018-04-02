@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as crypto from 'crypto-js';
-import {Blockchain, Block} from '../../blockchain/coin';
+import {Blockchain, Block, Transaction } from '../../blockchain/coin';
 
 @Component({
   selector: 'app-home',
@@ -15,17 +15,17 @@ export class HomeComponent implements OnInit {
 
   constructor() {
     console.log("constructor ran");
-
-    console.log("Mining block 1...");
-    this.coin.addBlock(new Block(1, new Date(), { coins: 10 }));
     
-    console.log("Mining block 2...");
-    this.coin.addBlock(new Block(2, new Date(), { coins: 42 }));
+    this.coin.createTx(new Transaction("addr1", "addr2", 10));
+    this.coin.createTx(new Transaction("addr1", "addr2", 15));
 
-    console.log(JSON.stringify(this.coin, null, 4));
-    console.log("Is chain valid? " + this.coin.checkChain());
-    this.coin.chain[1].data = { coins: 1000 };
-    console.log("Is chain valid? " + this.coin.checkChain());
+    console.log("Starting miner!");
+    this.coin.minePendingTxs("miner-wallet");
+    console.log("Balance of miner is", this.coin.getBalanceOfAddr("miner-wallet"));
+
+    console.log("Starting miner again!");
+    this.coin.minePendingTxs("miner-wallet");    
+    console.log("Balance of miner is", this.coin.getBalanceOfAddr("miner-wallet"));
   }
 
   ngOnInit() {

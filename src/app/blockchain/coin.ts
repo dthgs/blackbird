@@ -1,22 +1,33 @@
 import * as crypto from 'crypto-js';
 
+export class Transaction {
+    fromAddr: any;
+    toAddr: any;
+    amount: any;
+
+    constructor(fromAddr, toAddr, amount){
+        this.fromAddr = fromAddr;
+        this.toAddr = toAddr;
+        this.amount = amount;
+    }
+}
+
 export class Block {    
-    index; nonce: number;
+    nonce: number;
     timestamp: Date;
-    data: any;
+    transactions: any;
     prevHash; hash: string;
 
-    constructor(index, timestamp, data, prevHash = '') {
-        this.index = index;
+    constructor(timestamp, transactions, prevHash = ''){
         this.timestamp = timestamp;
-        this.data = data;
+        this.transactions = transactions;
         this.prevHash = prevHash;
         this.hash = this.hashBlock();
         this.nonce = 0;
     }
 
     hashBlock(){
-        return crypto.SHA256(this.index + this.prevHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
+        return crypto.SHA256(this.prevHash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).toString();
     }
 
     mineBlock(difficulty){
@@ -31,25 +42,61 @@ export class Block {
 
 export class Blockchain {
     chain: Block[];
-    difficulty = 3;
+    difficulty; reward: number;
+    pendingTransactions: Transaction[];
 
     constructor(){
         this.chain = [this.makeGenesisBlock()];
+        this.difficulty = 3;
+        this.pendingTransactions = [];
+        this.reward = 5;
     }
 
     makeGenesisBlock(){
-        return new Block(0, "03/30/2018", "FirstBlock", "x");
+        return new Block("03/30/2018", "FirstBlock", "x");
     }
 
     getLastBlock(){
         return this.chain[this.chain.length - 1];
     }
 
-    addBlock(block){
+    minePendingTxs(rewardAddr){
+        let block = new Block(Date.now(), this.pendingTransactions);
+        block.mineBlock(this.difficulty);
+        console.log("Block was successfully mined!");
+        this.chain.push(block);
+
+        this.pendingTransactions = [
+            new Transaction(null, rewardAddr, this.reward)
+        ];
+    }
+
+    createTx(transaction){
+        this.pendingTransactions.push(transaction);
+    }
+
+    getBalanceOfAddr(address){
+        let balance = 0;
+
+        for(const block of this.chain){
+            for(const tx of block.transactions){
+                if(tx.fromAddr === address){
+                    balance -= tx.amount;
+                }
+                if(tx.toAddr === address){
+                    balance += tx.amount;
+                }
+            }
+        }
+
+        return balance;
+    }
+
+    /*addBlock(block){
         block.prevHash = this.getLastBlock().hash;
         block.mineBlock(this.difficulty);
         this.chain.push(block);
-    }
+    }*/
 
     checkChain(){
         let valid = true;
